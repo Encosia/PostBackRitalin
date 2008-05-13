@@ -39,19 +39,19 @@ namespace Encosia
     /// <summary>
     /// Gets a JavaScript Array declaration representing the ClientIDs in the collection.
     /// </summary>
-    /// <returns>Ex: var PBR_MonitoredUpdatePanels = new Array('UpdatePanel1','UpdatePanel2');</returns>
+    /// <returns>Ex: ['UpdatePanel1','UpdatePanel2']</returns>
     internal string GetMonitoredPanelsArray()
     {
       StringBuilder sb = new StringBuilder();
 
-      sb.Append("var PBR_MonitoredUpdatePanels = new Array(");
+      sb.Append("[");
 
       foreach (MonitoredUpdatePanel pnl in this)
         sb.AppendFormat("'{0}',", pnl.UpdatePanelID);
 
       sb.Remove(sb.Length - 1, 1);
 
-      sb.Append(");");
+      sb.Append("]");
 
       return sb.ToString();
     }
@@ -59,34 +59,47 @@ namespace Encosia
     /// <summary>
     /// Gets a JavaScript Array declaration representing the WaitTexts in the collection.
     /// </summary>
-    /// <returns>Ex: var PBR_WaitTexts = new Array('Submitting...','Processing...');</returns>
+    /// <returns>Ex: {'UpdatePanel1' : 'Submitting...', 'UpdatePanel2' : 'Processing...'}</returns>
     internal string GetWaitTextsArray()
     {
       StringBuilder sb = new StringBuilder();
 
-      sb.Append("var PBR_WaitTexts = new Array();");
+      sb.Append("{");
 
       foreach (MonitoredUpdatePanel pnl in this)
         if (!string.IsNullOrEmpty(pnl.WaitText))
-          sb.AppendFormat("PBR_WaitTexts['{0}'] = '{1}';", pnl.UpdatePanelID, pnl.WaitText);
+          sb.AppendFormat("'{0}' : '{1}',", pnl.UpdatePanelID, pnl.WaitText);
 
-      return sb.ToString();
+      if (sb.Length > 2)
+      {
+        sb.Remove(sb.Length - 1, 1);
+
+        sb.Append("}");
+
+        return sb.ToString();
+      }
+      else
+        return null;
     }
 
     /// <summary>
     /// Gets a JavaScript Array declaration representing the WaitImages in the collection.
     /// </summary>
-    /// <returns>Ex: var PBR_MonitoredUpdatePanels = new Array('waitimage1.jpg','waitimage2.jpg');</returns>
+    /// <returns>Ex: {'UpdatePanel1' : 'waitimage1.jpg','UpdatePanel2' : 'waitimage2.jpg'}</returns>
     internal string GetWaitImagesArray()
     {
       StringBuilder sb = new StringBuilder();
 
-      sb.Append("var PBR_WaitImages = new Array();");
+      sb.Append("{");
 
       foreach (MonitoredUpdatePanel pnl in this)
         if (!string.IsNullOrEmpty(pnl.WaitImage))
-          sb.AppendFormat("PBR_WaitImages['{0}'] = '{1}';", pnl.UpdatePanelID,
-                                                            VirtualURLHelper(pnl.WaitImage));
+          sb.AppendFormat("'{0}' : '{1}',", pnl.UpdatePanelID,
+                                            VirtualURLHelper(pnl.WaitImage));
+
+      sb.Remove(sb.Length - 1, 1);
+
+      sb.Append("}");
 
       return sb.ToString();
     }

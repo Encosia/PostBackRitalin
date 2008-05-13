@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Text;
-using System.Threading;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -46,41 +45,46 @@ namespace Encosia
 
     protected override void OnPreRender(EventArgs e)
     {
-      base.OnPreRender(e);
+      Page.ClientScript.RegisterClientScriptResource(this.GetType(), "PostBackRitalin.PostBackRitalin.js");
 
-      if (ScriptManagerHelper.IsMicrosoftAjaxAvailable)
+      string waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages;
+
+
+      if (!string.IsNullOrEmpty(_waitText))
+        waitText = string.Format("'{0}'", _waitText);
+      else
+        waitText = "null";
+      
+      if (!string.IsNullOrEmpty(_waitImage))
+        waitImage = string.Format("'{0}'", ResolveUrl(_waitImage));
+      else
+        waitImage = "null";
+
+      if (_monitoredUpdatePanels.Count > 0)
       {
-        ScriptManagerHelper.RegisterClientScriptResource(
-          this,
-          typeof(PostBackRitalin),
-          "PostBackRitalin.PostBackRitalin.js");
+        monitoredUpdatePanels = _monitoredUpdatePanels.GetMonitoredPanelsArray();
 
-        StringBuilder script = new StringBuilder();
-        
-        script.Append("Sys.Application.add_init(PBR_ApplicationInit);");
-        
-        if (!string.IsNullOrEmpty(_waitText))
-          script.AppendFormat("var PBR_WaitText = '{0}';", _waitText);
-        
-        if (!string.IsNullOrEmpty(_waitImage))
-          script.AppendFormat("var PBR_WaitImage = '{0}';", ResolveUrl(_waitImage));
+        waitTexts = _monitoredUpdatePanels.GetWaitTextsArray();
 
-        if (_monitoredUpdatePanels.Count > 0)
-          script.Append(_monitoredUpdatePanels.GetMonitoredPanelsArray());
+        if (string.IsNullOrEmpty(waitTexts))
+          waitTexts = "null";
 
-        script.Append(_monitoredUpdatePanels.GetWaitTextsArray());
+        waitImages = _monitoredUpdatePanels.GetWaitImagesArray();
 
-        script.Append(_monitoredUpdatePanels.GetWaitImagesArray());
-
-        ScriptManagerHelper.RegisterStartupScript(
-          this,
-          typeof(PostBackRitalin),
-          "PBR_Initialize",
-          script.ToString(),
-          true);
+        if (string.IsNullOrEmpty(waitImages))
+          waitImages = "null";
       }
       else
-        throw new Exception("Unable to acquire a ScriptManager reference.  PostBack");
+      {
+        monitoredUpdatePanels = "null";
+        waitTexts = "null";
+        waitImages = "null";
+      }
+
+      string script = string.Format("var pbr = new PostBackRitalin({0}, {1}, {2}, {3}, {4}, true);",
+        waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages);
+
+      Page.ClientScript.RegisterStartupScript(Page.GetType(), "PostBackRitalin_Init", script, true);
     }
   }
 }

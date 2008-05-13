@@ -1,89 +1,142 @@
-﻿/// <reference name="MicrosoftAjax.js" />
-function PBR_ApplicationInit() 
-{
-  Sys.WebForms.PageRequestManager.getInstance().add_beginRequest(PBR_BeginRequest);
-  Sys.WebForms.PageRequestManager.getInstance().add_endRequest(PBR_EndRequest);
+﻿var PostBackRitalin = function(waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages, preload) {
+  this._waitText = waitText;
+  this._waitImage = waitImage;
+
+  this._monitoredUpdatePanels = monitoredUpdatePanels;
   
-  var PBR_oldText;
-  var PBR_oldImage;
+  this._waitTexts = waitTexts;
+  this._waitImages = waitImages;
+  
+  this._preload = preload;
+
+  this._pageRequestManager = null;
+  this._beginRequestHandler = null;
+  this._endRequestHandler = null;
+  
+  this._oldText = null;
+  this._oldImage = null;
+  this._oldHref = null;
+  
+  this._initialize();
 }
 
-function PBR_BeginRequest(sender, args)
-{
-  var sendingPanel = sender._postBackSettings.panelID.split('|')[0];
-
-  if (PBR_IsMonitoredRequest(sendingPanel))
-  {
-    if (args.get_postBackElement().type == 'submit')
-    {
-      args.get_postBackElement().disabled = true;
-      args.get_postBackElement().blur();
-      PBR_oldText = args.get_postBackElement().value;
-
-      if (PBR_GetWaitText(sendingPanel) != null)
-        args.get_postBackElement().value = PBR_GetWaitText(sendingPanel);
-    }
-    else if (args.get_postBackElement().type == 'image')
-    {
-      args.get_postBackElement().disabled = true;
-      args.get_postBackElement().blur();
-      PBR_oldImage = args.get_postBackElement().src;
-      
-      if (PBR_GetWaitImage(sendingPanel) != null)
-        args.get_postBackElement().src = PBR_GetWaitImage(sendingPanel);
-    }
-  }
-}
-
-function PBR_EndRequest(sender, args)
-{
-  // Check to make sure the item hasn't been removed during the postback.
-  if ($get(sender._postBackSettings.sourceElement.id) != null && PBR_IsMonitoredRequest(sender._postBackSettings.panelID))
-  {
-    $get(sender._postBackSettings.sourceElement.id).disabled = false;
-    
-    // Handles regular submit buttons.
-    if (sender._postBackSettings.sourceElement.type == 'submit')
-      $get(sender._postBackSettings.sourceElement.id).value = PBR_oldText;
-      
-    // Handles image buttons.
-    if (sender._postBackSettings.sourceElement.type == 'image')
-      $get(sender._postBackSettings.sourceElement.id).src = PBR_oldImage;
-  }
-}
-
-function PBR_IsMonitoredRequest(panelID)
-{
-  if (typeof(PBR_MonitoredUpdatePanels) == 'undefined')
-    return true;
-    
-  for (i = 0; i < PBR_MonitoredUpdatePanels.length; i++)
-    if (panelID.match(PBR_MonitoredUpdatePanels[i]) != null)
+PostBackRitalin.prototype = {
+  _isMonitoredRequest : function(panelID) {
+    if (this._monitoredUpdatePanels == null)
       return true;
       
-  return false;
-}
-
-function PBR_GetWaitImage(panelID)
-{
-  for (i in PBR_WaitImages)
-    if (panelID.match(i) != null)
-      return PBR_WaitImages[i];
+    for (i = 0; i < this._monitoredUpdatePanels.length; i++)
+      if (panelID.match(this._monitoredUpdatePanels[i]) != null)
+        return true;
+        
+    return false;
+  },
   
-  if (typeof(PBR_WaitImage) != 'undefined')
-    return PBR_WaitImage;
-  else
-    return null;
-}
+  get_waitText : function(panelID) {
+    if (this._waitTexts)
+      for (var i in this._waitTexts)
+        if (panelID.match(i) != null)
+          return this._waitTexts[i];
+    
+    if (this._waitText != null)
+      return this._waitText;
+      
+    return null;  
+  },
+   
+  get_waitImage : function(panelID) {
+    if (this._waitImages)
+      for (var i in this._waitImages)
+        if (panelID.match(i) != null)
+          return this._waitImages[i];
+    
+    if (this._waitImage != null)
+      return this._waitImage;
+      
+    return null;  
+  },
+           
+  _beginRequest : function(sender, args) {
+    var sendingPanel = sender._postBackSettings.panelID.split('|')[0];
+    var element = args.get_postBackElement();
 
-function PBR_GetWaitText(panelID)
-{
-  for (i in PBR_WaitTexts)
-    if (panelID.match(i) != null)
-      return PBR_WaitTexts[i];
+    if (this._isMonitoredRequest(sendingPanel))
+    {
+      if (element.type == 'submit')
+      {
+        element.disabled = true;
+        element.blur();
+        
+        this._oldText = element.value;
+        
+        var waitText = this.get_waitText(sendingPanel);
+
+        if (waitText != null)
+          element.value = waitText;
+      }
+      else if (element.type == 'image')
+      {
+        element.disabled = true;
+        element.blur();
+        
+        this._oldImage = element.src;
+        
+        var waitImage = this.get_waitImage(sendingPanel);
+        
+        if (waitImage != null)
+          element.src = waitImage;
+      }
+      else if (element.tagName == 'A')
+      {
+        this._oldHref = element.href;
+        element.href = '#';
+      }
+    }
+  },
+    
+  _endRequest : function(sender, args) {
+    var element = $get(sender._postBackSettings.sourceElement.id);
   
-  if (typeof(PBR_WaitText) != 'undefined')
-    return PBR_WaitText;
-  else
-    return null;
-}
+    // Check to make sure the item hasn't been removed during the postback.
+    if (element != null && this._isMonitoredRequest(sender._postBackSettings.panelID))
+    {
+      element.disabled = false;
+      
+      // Handles regular submit buttons.
+      if (element.type == 'submit')
+      {
+        element.value = this._oldText;
+        this._oldText = null;
+      }
+      // Handles image buttons.
+      else if (element.type == 'image')
+      {
+        element.src = this._oldImage;
+        this._oldImage = null;
+      }
+      else if (element.tagName == 'A')
+      {
+        element.href = this._oldHref;
+        this._oldHref = null;
+      }
+    }
+  },
+
+  _initialize : function() {
+    this._pageRequestManager = Sys.WebForms.PageRequestManager.getInstance();
+    
+    this._beginRequestHandler = Function.createDelegate(this, this._beginRequest);
+    this._pageRequestManager.add_beginRequest(this._beginRequestHandler);
+    
+    this._endRequestHandler = Function.createDelegate(this, this._endRequest);
+    this._pageRequestManager.add_endRequest(this._endRequestHandler);
+    
+    if (this._preload)
+    {
+      var image = new Image();
+      
+      for (var i in this._waitImages)
+        image.src = this._waitImages[i];
+    }
+  }
+};
