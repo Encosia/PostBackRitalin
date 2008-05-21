@@ -28,6 +28,7 @@ namespace Encosia
 
 
     [DefaultValue("Processing...")]
+    [Localizable(true)]
     [Description("Progress indication message to show in disabled buttons during partial postback.")]
     public string WaitText
     {
@@ -36,6 +37,7 @@ namespace Encosia
     }
     
     [UrlProperty()]
+    [Localizable(true)]
     [Description("Progress indication image URL to replace ImageButtons with during partial postbacks.")]
     public string WaitImage
     {

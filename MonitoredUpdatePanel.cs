@@ -18,6 +18,7 @@ namespace Encosia
       set { _updatePanelID = value; }
     }
 
+    [Localizable(true)]
     [Description("The WaitText to use for Buttons in this monitored UpdatePanel.")]
     public string WaitText
     {
@@ -26,6 +27,7 @@ namespace Encosia
     }
 
     [UrlProperty()]
+    [Localizable(true)]
     [Description("The WaitImage to use for ImageButtons in this monitored UpdatePanel.")]
     public string WaitImage
     {
