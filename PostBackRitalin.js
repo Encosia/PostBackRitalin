@@ -60,7 +60,7 @@ PostBackRitalin.prototype = {
     var sendingPanel = sender._postBackSettings.panelID.split('|')[0];
     var element = args.get_postBackElement();
 
-    if (this._isMonitoredRequest(sendingPanel))
+    if (element != null && this._isMonitoredRequest(sendingPanel))
     {
       if (element.type == 'submit')
       {
