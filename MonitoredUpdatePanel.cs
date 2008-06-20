@@ -99,11 +99,16 @@ namespace Encosia
           sb.AppendFormat("'{0}' : '{1}',", pnl.UpdatePanelID,
                                             VirtualURLHelper(pnl.WaitImage));
 
-      sb.Remove(sb.Length - 1, 1);
+      if (sb.Length > 2)
+      {
+        sb.Remove(sb.Length - 1, 1);
 
-      sb.Append("}");
+        sb.Append("}");
 
-      return sb.ToString();
+        return sb.ToString();
+      }
+      else
+        return null;
     }
 
     private string VirtualURLHelper(string URL)
