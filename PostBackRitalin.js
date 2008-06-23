@@ -95,7 +95,7 @@ PostBackRitalin.prototype = {
   },
     
   _endRequest : function(sender, args) {
-    var element = $get(sender._postBackSettings.sourceElement.id);
+    element = sender._postBackSettings.sourceElement;
   
     // Check to make sure the item hasn't been removed during the postback.
     if (element != null && this._isMonitoredRequest(sender._postBackSettings.panelID))
