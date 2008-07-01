@@ -36,4 +36,4 @@ using System.Web.UI;
 [assembly: AssemblyVersion("0.10.*")]
 [assembly: AssemblyFileVersion("0.10")]
 
-[assembly: WebResource("PostBackRitalin.PostBackRitalin.js", "application/x-javascript")]
+[assembly: WebResource("PostBackRitalin.PostBackRitalin.min.js", "application/x-javascript")]

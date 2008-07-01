@@ -57,7 +57,7 @@ namespace Encosia
     protected override void OnPreRender(EventArgs e)
     {
       // Register the JavaScript class include.
-      Page.ClientScript.RegisterClientScriptResource(GetType(), "PostBackRitalin.PostBackRitalin.js");
+      Page.ClientScript.RegisterClientScriptResource(GetType(), "PostBackRitalin.PostBackRitalin.min.js");
 
       string waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages, preload;
 
