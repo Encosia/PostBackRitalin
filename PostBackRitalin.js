@@ -62,7 +62,7 @@ PostBackRitalin.prototype = {
 
     if (element != null && this._isMonitoredRequest(sendingPanel))
     {
-      if (element.type == 'submit')
+      if (element.type == 'submit' || element.type == 'button')
       {
         element.disabled = true;
         element.blur();
