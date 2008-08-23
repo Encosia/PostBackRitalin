@@ -103,7 +103,7 @@ PostBackRitalin.prototype = {
       element.disabled = false;
       
       // Handles regular submit buttons.
-      if (element.type == 'submit')
+      if (element.type == 'submit' || element.type == 'button')
       {
         element.value = this._oldText;
         this._oldText = null;
