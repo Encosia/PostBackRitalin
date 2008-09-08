@@ -61,7 +61,7 @@ namespace Encosia
     /// <summary>
     /// Gets a JavaScript Array declaration representing the WaitTexts in the collection.
     /// </summary>
-    /// <returns>Ex: {'UpdatePanel1' : 'Submitting...', 'UpdatePanel2' : 'Processing...'}</returns>
+    /// <returns>Ex: {'UpdatePanel1':'Submitting...', 'UpdatePanel2':'Processing...'}</returns>
     internal string GetWaitTextsArray()
     {
       StringBuilder sb = new StringBuilder();
@@ -70,7 +70,7 @@ namespace Encosia
 
       foreach (MonitoredUpdatePanel pnl in this)
         if (!string.IsNullOrEmpty(pnl.WaitText))
-          sb.AppendFormat("'{0}' : '{1}',", pnl.UpdatePanelID, pnl.WaitText);
+          sb.AppendFormat("'{0}':'{1}',", pnl.UpdatePanelID, pnl.WaitText);
 
       if (sb.Length > 2)
       {
@@ -87,7 +87,7 @@ namespace Encosia
     /// <summary>
     /// Gets a JavaScript Array declaration representing the WaitImages in the collection.
     /// </summary>
-    /// <returns>Ex: {'UpdatePanel1' : 'waitimage1.jpg','UpdatePanel2' : 'waitimage2.jpg'}</returns>
+    /// <returns>Ex: {'UpdatePanel1':'waitimage1.jpg','UpdatePanel2':'waitimage2.jpg'}</returns>
     internal string GetWaitImagesArray()
     {
       StringBuilder sb = new StringBuilder();
@@ -96,8 +96,7 @@ namespace Encosia
 
       foreach (MonitoredUpdatePanel pnl in this)
         if (!string.IsNullOrEmpty(pnl.WaitImage))
-          sb.AppendFormat("'{0}' : '{1}',", pnl.UpdatePanelID,
-                                            VirtualURLHelper(pnl.WaitImage));
+          sb.AppendFormat("'{0}':'{1}',", pnl.UpdatePanelID, VirtualURLHelper(pnl.WaitImage));
 
       if (sb.Length > 2)
       {
