@@ -26,13 +26,20 @@ namespace Encosia
       set { _waitText = value; }
     }
 
-    [UrlProperty()]
+    [UrlProperty]
     [Localizable(true)]
     [Description("The WaitImage to use for ImageButtons in this monitored UpdatePanel.")]
     public string WaitImage
     {
       get { return _waitImage; }
       set { _waitImage = value; }
+    }
+
+    [Description("Should all elements within this UpdatePanel be disabled when it triggers a partial postback?")]
+    [DefaultValue(false)]
+    public bool DisableAllElements
+    {
+      get; set;
     }
   }
 
@@ -80,8 +87,9 @@ namespace Encosia
 
         return sb.ToString();
       }
-      else
-        return null;
+
+      // Else
+      return null;
     }
 
     /// <summary>
@@ -95,9 +103,14 @@ namespace Encosia
       sb.Append("{");
 
       foreach (MonitoredUpdatePanel pnl in this)
+      {
         if (!string.IsNullOrEmpty(pnl.WaitImage))
+        {
           sb.AppendFormat("'{0}':'{1}',", pnl.UpdatePanelID, VirtualURLHelper(pnl.WaitImage));
+        }
+      }
 
+      // If items have been added, remove the extraneous trailing comma.
       if (sb.Length > 2)
       {
         sb.Remove(sb.Length - 1, 1);
@@ -106,8 +119,34 @@ namespace Encosia
 
         return sb.ToString();
       }
-      else
-        return null;
+      
+      // Else
+      return null;
+    }
+
+    internal string GetDisableAllArray()
+    {
+      StringBuilder sb = new StringBuilder();
+
+      sb.Append("{");
+
+      foreach (MonitoredUpdatePanel pnl in this)
+      {
+        sb.AppendFormat("'{0}':'{1}',", pnl.UpdatePanelID, pnl.DisableAllElements);
+      }
+
+      // If items have been added, remove the extraneous trailing comma.
+      if (sb.Length > 2)
+      {
+        sb.Remove(sb.Length - 1, 1);
+
+        sb.Append("}");
+
+        return sb.ToString();
+      }
+
+      // Else
+      return null;
     }
 
     private string VirtualURLHelper(string URL)

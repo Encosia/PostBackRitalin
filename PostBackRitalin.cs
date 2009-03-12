@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Web;
+using System.Web.Script.Serialization;
 using System.Web.UI;
 using System.Web.UI.Design;
 
@@ -17,6 +18,7 @@ namespace Encosia
     
     private string _waitText = "Processing...";
     private string _waitImage;
+    private string _waitClass;
 
     private bool _preloadWaitImages = true;
   
@@ -49,6 +51,13 @@ namespace Encosia
       set { _waitImage = value; }
     }
 
+    [Description("This CSS class will be applied to disabled links during partial postbacks.")]
+    public string WaitClass
+    {
+      get { return _waitClass; }
+      set { _waitClass = value; }
+    }
+
     [DefaultValue(true)]
     [Description("If true, WaitImages will be preloaded on the client side.")]
     public bool PreloadWaitImages
@@ -59,53 +68,53 @@ namespace Encosia
 
     protected override void OnPreRender(EventArgs e)
     {
-      // Register the JavaScript class include.
-      if (HttpContext.Current.IsDebuggingEnabled)
-        Page.ClientScript.RegisterClientScriptResource(GetType(), "PostBackRitalin.PostBackRitalin.js");
-      else
-        Page.ClientScript.RegisterClientScriptResource(GetType(), "PostBackRitalin.PostBackRitalin.min.js");
-
-      string waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages, preload;
-
-      if (!string.IsNullOrEmpty(_waitText))
-        waitText = string.Format("'{0}'", _waitText);
-      else
-        waitText = "null";
-      
-      if (!string.IsNullOrEmpty(_waitImage))
-        waitImage = string.Format("'{0}'", ResolveUrl(_waitImage));
-      else
-        waitImage = "null";
-
-      if (_monitoredUpdatePanels.Count > 0)
+      if (!Page.IsPostBack)
       {
-        monitoredUpdatePanels = _monitoredUpdatePanels.GetMonitoredPanelsArray();
+        // Register the JavaScript class include.
+        if (HttpContext.Current.IsDebuggingEnabled)
+          Page.ClientScript.RegisterClientScriptResource(GetType(), "PostBackRitalin.PostBackRitalin.js");
+        else
+          Page.ClientScript.RegisterClientScriptResource(GetType(), "PostBackRitalin.PostBackRitalin.min.js");
 
-        waitTexts = _monitoredUpdatePanels.GetWaitTextsArray();
+        string waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages, preload, waitClass;
 
-        if (string.IsNullOrEmpty(waitTexts))
-          waitTexts = "null";
+        if (!string.IsNullOrEmpty(_waitText))
+          waitText = string.Format("'{0}'", _waitText);
+        else
+          waitText = "null";
 
-        waitImages = _monitoredUpdatePanels.GetWaitImagesArray();
+        if (!string.IsNullOrEmpty(_waitImage))
+          waitImage = string.Format("'{0}'", ResolveUrl(_waitImage));
+        else
+          waitImage = "null";
 
-        if (string.IsNullOrEmpty(waitImages))
-          waitImages = "null";
+        if (!string.IsNullOrEmpty(_waitClass))
+          waitClass = string.Format("'{0}'", _waitClass);
+        else
+          waitClass = "null";
+
+
+        if (_monitoredUpdatePanels.Count > 0)
+        {
+          JavaScriptSerializer js = new JavaScriptSerializer();
+
+          monitoredUpdatePanels = js.Serialize(_monitoredUpdatePanels);
+        }
+        else
+        {
+          monitoredUpdatePanels = "null";
+        }
+
+        preload = _preloadWaitImages ? "true" : "false";
+
+        // Inject JavaScript to create the PBR object, with parameters matching the properties of the
+        //  server control.
+        string script = string.Format("var pbr = new PostBackRitalin({0}, {1}, {2}, {3}, {4});",
+                                      waitText, waitImage, monitoredUpdatePanels, preload,
+                                      waitClass);
+
+        Page.ClientScript.RegisterStartupScript(Page.GetType(), "PostBackRitalin_Init", script, true);
       }
-      else
-      {
-        monitoredUpdatePanels = "null";
-        waitTexts = "null";
-        waitImages = "null";
-      }
-
-      preload = _preloadWaitImages ? "true" : "false";
-
-      // Inject JavaScript to create the PBR object, with parameters matching the properties of the
-      //  server control.
-      string script = string.Format("var pbr = new PostBackRitalin({0}, {1}, {2}, {3}, {4}, {5});",
-        waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages, preload);
-
-      Page.ClientScript.RegisterStartupScript(Page.GetType(), "PostBackRitalin_Init", script, true);
     }
   }
 }
