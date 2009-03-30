@@ -103,8 +103,18 @@ PostBackRitalin.prototype = {
     }
   },
 
+  _parseSendingPanel: function(SenderString) {
+    // Grab just the sending UpdatePanel's ID.
+    var tmp = SenderString.split('|')[0];
+
+    // Replace any $ characters with underscores.
+    tmp = tmp.replace(/\$/g, '_');
+
+    return tmp;
+  },
+
   _beginRequest: function(sender, args) {
-    var sendingPanel = sender._postBackSettings.panelID.split('|')[0];
+    var sendingPanel = this._parseSendingPanel(sender._postBackSettings.panelID);
     var element = args.get_postBackElement();
 
     if (element != null && this._isMonitoredRequest(sendingPanel)) {
@@ -140,17 +150,18 @@ PostBackRitalin.prototype = {
         }
       }
 
-      if (this._isDisableAllElementsPanel) {
+      if (this._isDisableAllElementsPanel(sendingPanel)) {
         this._disableAllElements(sendingPanel);
       }
     }
   },
 
   _endRequest: function(sender, args) {
-    element = sender._postBackSettings.sourceElement;
+    var element = sender._postBackSettings.sourceElement;
+    var sendingPanel = this._parseSendingPanel(sender._postBackSettings.panelID);
 
     // Check to make sure the item hasn't been removed during the postback.
-    if (element != null && this._isMonitoredRequest(sender._postBackSettings.panelID)) {
+    if (element != null && this._isMonitoredRequest(sendingPanel)) {
       element.disabled = false;
 
       // Handles regular submit buttons.
