@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Text;
 using System.Web.UI;
+using PostBackRitalin;
 
 namespace Encosia
 {
@@ -32,7 +33,7 @@ namespace Encosia
     public string WaitImage
     {
       get { return _waitImage; }
-      set { _waitImage = value; }
+      set { _waitImage = Utilities.VirtualURLHelper(value); }
     }
 
     [Description("Should all elements within this UpdatePanel be disabled when it triggers a partial postback?")]
@@ -45,116 +46,9 @@ namespace Encosia
 
   public class MonitoredUpdatePanelCollection : List<MonitoredUpdatePanel>
   {
-    /// <summary>
-    /// Gets a JavaScript Array declaration representing the ClientIDs in the collection.
-    /// </summary>
-    /// <returns>Ex: ['UpdatePanel1','UpdatePanel2']</returns>
-    internal string GetMonitoredPanelsArray()
-    {
-      StringBuilder sb = new StringBuilder();
-
-      sb.Append("[");
-
-      foreach (MonitoredUpdatePanel pnl in this)
-        sb.AppendFormat("'{0}',", pnl.UpdatePanelID);
-
-      sb.Remove(sb.Length - 1, 1);
-
-      sb.Append("]");
-
-      return sb.ToString();
-    }
-
-    /// <summary>
-    /// Gets a JavaScript Array declaration representing the WaitTexts in the collection.
-    /// </summary>
-    /// <returns>Ex: {'UpdatePanel1':'Submitting...', 'UpdatePanel2':'Processing...'}</returns>
-    internal string GetWaitTextsArray()
-    {
-      StringBuilder sb = new StringBuilder();
-
-      sb.Append("{");
-
-      foreach (MonitoredUpdatePanel pnl in this)
-        if (!string.IsNullOrEmpty(pnl.WaitText))
-          sb.AppendFormat("'{0}':'{1}',", pnl.UpdatePanelID, pnl.WaitText);
-
-      if (sb.Length > 2)
+      public MonitoredUpdatePanelCollection()
       {
-        sb.Remove(sb.Length - 1, 1);
 
-        sb.Append("}");
-
-        return sb.ToString();
       }
-
-      // Else
-      return null;
-    }
-
-    /// <summary>
-    /// Gets a JavaScript Array declaration representing the WaitImages in the collection.
-    /// </summary>
-    /// <returns>Ex: {'UpdatePanel1':'waitimage1.jpg','UpdatePanel2':'waitimage2.jpg'}</returns>
-    internal string GetWaitImagesArray()
-    {
-      StringBuilder sb = new StringBuilder();
-
-      sb.Append("{");
-
-      foreach (MonitoredUpdatePanel pnl in this)
-      {
-        if (!string.IsNullOrEmpty(pnl.WaitImage))
-        {
-          sb.AppendFormat("'{0}':'{1}',", pnl.UpdatePanelID, VirtualURLHelper(pnl.WaitImage));
-        }
-      }
-
-      // If items have been added, remove the extraneous trailing comma.
-      if (sb.Length > 2)
-      {
-        sb.Remove(sb.Length - 1, 1);
-
-        sb.Append("}");
-
-        return sb.ToString();
-      }
-      
-      // Else
-      return null;
-    }
-
-    internal string GetDisableAllArray()
-    {
-      StringBuilder sb = new StringBuilder();
-
-      sb.Append("{");
-
-      foreach (MonitoredUpdatePanel pnl in this)
-      {
-        sb.AppendFormat("'{0}':'{1}',", pnl.UpdatePanelID, pnl.DisableAllElements);
-      }
-
-      // If items have been added, remove the extraneous trailing comma.
-      if (sb.Length > 2)
-      {
-        sb.Remove(sb.Length - 1, 1);
-
-        sb.Append("}");
-
-        return sb.ToString();
-      }
-
-      // Else
-      return null;
-    }
-
-    private string VirtualURLHelper(string URL)
-    {
-      if (URL.StartsWith("~"))
-        return System.Web.VirtualPathUtility.ToAbsolute(URL);
-      else
-        return URL;
-    }
   }
 }

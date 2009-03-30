@@ -76,7 +76,7 @@ namespace Encosia
         else
           Page.ClientScript.RegisterClientScriptResource(GetType(), "PostBackRitalin.PostBackRitalin.min.js");
 
-        string waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages, preload, waitClass;
+        string waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages, waitClass;
 
         if (!string.IsNullOrEmpty(_waitText))
           waitText = string.Format("'{0}'", _waitText);
@@ -105,7 +105,7 @@ namespace Encosia
           monitoredUpdatePanels = "null";
         }
 
-        preload = _preloadWaitImages ? "true" : "false";
+        string preload = _preloadWaitImages ? "true" : "false";
 
         // Inject JavaScript to create the PBR object, with parameters matching the properties of the
         //  server control.
