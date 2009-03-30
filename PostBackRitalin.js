@@ -186,8 +186,16 @@ PostBackRitalin.prototype = {
     if (this._preload) {
       var image = new Image();
 
-      for (var i in this._waitImages) {
-        image.src = this._waitImages[i];
+      // Preload the global WaitImage.
+      if (this._waitImage != null) {
+        image.src = this._waitImage;
+      }
+
+      // Preload each UpdatePanel specific image.
+      for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
+        if (this._monitoredUpdatePanels[i].WaitImage != null) {
+          image.src = this._monitoredUpdatePanels[i].WaitImage;
+        }
       }
     }
   }
