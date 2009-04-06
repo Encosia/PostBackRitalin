@@ -16,16 +16,16 @@
   this._oldHref = null;
 
   this._initialize();
-}
+};
 
 PostBackRitalin.prototype = {
   _isMonitoredRequest: function(panelID) {
-    if (this._monitoredUpdatePanels == null) {
+    if (this._monitoredUpdatePanels === null) {
       return true;
     }
 
     for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
-      if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) != null) {
+      if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) !== null) {
         return true;
       }
     }
@@ -34,12 +34,12 @@ PostBackRitalin.prototype = {
   },
 
   _isDisableAllElementsPanel: function(panelID) {
-    if (this._monitoredUpdatePanels == null) {
+    if (this._monitoredUpdatePanels === null) {
       return false;
     }
 
     for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
-      if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) != null) {
+      if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) !== null) {
         return this._monitoredUpdatePanels[i].DisableAllElements;
       }
     }
@@ -48,13 +48,13 @@ PostBackRitalin.prototype = {
   get_waitText: function(panelID) {
     if (this._monitoredUpdatePanels) {
       for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
-        if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) != null) {
+        if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) !== null) {
           return this._monitoredUpdatePanels[i].WaitText;
         }
       }
     }
 
-    if (this._waitText != null) {
+    if (this._waitText !== null) {
       return this._waitText;
     }
 
@@ -64,13 +64,13 @@ PostBackRitalin.prototype = {
   get_waitImage: function(panelID) {
     if (this._monitoredUpdatePanels) {
       for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
-        if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) != null) {
+        if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) !== null) {
           return this._monitoredUpdatePanels[i].WaitImage;
         }
       }
     }
 
-    if (this._waitImage != null) {
+    if (this._waitImage !== null) {
       return this._waitImage;
     }
 
@@ -80,7 +80,7 @@ PostBackRitalin.prototype = {
   _disableAllElements: function(panelID) {
     var panel = $get(panelID);
 
-    if (panel != null) {
+    if (panel !== null) {
       var inputs = panel.getElementsByTagName('input');
 
       for (var i = 0; i < inputs.length; i++) {
@@ -92,10 +92,10 @@ PostBackRitalin.prototype = {
       var anchors = panel.getElementsByTagName('a');
 
       for (var i = 0; i < anchors.length; i++) {
-        if (anchors[i].href.match('javascript:__doPostBack') != null) {
+        if (anchors[i].href.match('javascript:__doPostBack') !== null) {
           anchors[i].href = '#';
 
-          if (this._waitClass != null) {
+          if (this._waitClass !== null) {
             Sys.UI.DomElement.addCssClass(anchors[i], this._waitClass);
           }
         }
@@ -117,7 +117,7 @@ PostBackRitalin.prototype = {
     var sendingPanel = this._parseSendingPanel(sender._postBackSettings.panelID);
     var element = args.get_postBackElement();
 
-    if (element != null && this._isMonitoredRequest(sendingPanel)) {
+    if (element !== null && this._isMonitoredRequest(sendingPanel)) {
       if (element.type == 'submit' || element.type == 'button') {
         element.disabled = true;
         element.blur();
@@ -126,8 +126,9 @@ PostBackRitalin.prototype = {
 
         var waitText = this.get_waitText(sendingPanel);
 
-        if (waitText != null)
+        if (waitText !== null) {
           element.value = waitText;
+        }
       }
       else if (element.type == 'image') {
         element.disabled = true;
@@ -137,15 +138,16 @@ PostBackRitalin.prototype = {
 
         var waitImage = this.get_waitImage(sendingPanel);
 
-        if (waitImage != null)
+        if (waitImage !== null) {
           element.src = waitImage;
+        }
       }
       else if (element.tagName == 'A') {
         this._oldHref = element.href;
         element.href = '#';
         element.blur();
 
-        if (this._waitClass != null) {
+        if (this._waitClass !== null) {
           Sys.UI.DomElement.addCssClass(element, this._waitClass);
         }
       }
@@ -161,7 +163,7 @@ PostBackRitalin.prototype = {
     var sendingPanel = this._parseSendingPanel(sender._postBackSettings.panelID);
 
     // Check to make sure the item hasn't been removed during the postback.
-    if (element != null && this._isMonitoredRequest(sendingPanel)) {
+    if (element !== null && this._isMonitoredRequest(sendingPanel)) {
       element.disabled = false;
 
       // Handles regular submit buttons.
@@ -178,7 +180,7 @@ PostBackRitalin.prototype = {
         element.href = this._oldHref;
         this._oldHref = null;
 
-        if (this._waitClass != null) {
+        if (this._waitClass !== null) {
           Sys.UI.DomElement.removeCssClass(element, this._waitClass);
         }
       }
@@ -198,14 +200,16 @@ PostBackRitalin.prototype = {
       var image = new Image();
 
       // Preload the global WaitImage.
-      if (this._waitImage != null) {
+      if (this._waitImage !== null) {
         image.src = this._waitImage;
       }
 
       // Preload each UpdatePanel specific image.
-      for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
-        if (this._monitoredUpdatePanels[i].WaitImage != null) {
-          image.src = this._monitoredUpdatePanels[i].WaitImage;
+      if (this._monitoredUpdatePanels !== null) {
+        for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
+          if (this._monitoredUpdatePanels[i].WaitImage !== null) {
+            image.src = this._monitoredUpdatePanels[i].WaitImage;
+          }
         }
       }
     }
