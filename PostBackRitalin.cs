@@ -76,7 +76,7 @@ namespace Encosia
         else
           Page.ClientScript.RegisterClientScriptResource(GetType(), "PostBackRitalin.PostBackRitalin.min.js");
 
-        string waitText, waitImage, monitoredUpdatePanels, waitTexts, waitImages, waitClass;
+        string waitText, waitImage, monitoredUpdatePanels, waitClass;
 
         if (!string.IsNullOrEmpty(_waitText))
           waitText = string.Format("'{0}'", _waitText);
