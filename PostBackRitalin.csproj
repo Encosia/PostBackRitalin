@@ -61,4 +61,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>"$(ProjectDir)tools\jsmin.exe" &lt; "$(ProjectDir)PostBackRitalin.js" &gt; "$(ProjectDir)PostBackRitalin.min.js"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
