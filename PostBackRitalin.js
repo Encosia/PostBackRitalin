@@ -19,9 +19,13 @@
 };
 
 PostBackRitalin.prototype = {
-  _isMonitoredRequest: function(panelID) {
+  _isMonitoredRequest: function (panelID) {
     if (this._monitoredUpdatePanels === null) {
       return true;
+    }
+
+    if (panelID === null) {
+      return false;
     }
 
     for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
@@ -33,8 +37,12 @@ PostBackRitalin.prototype = {
     return false;
   },
 
-  _isDisableAllElementsPanel: function(panelID) {
+  _isDisableAllElementsPanel: function (panelID) {
     if (this._monitoredUpdatePanels === null) {
+      return false;
+    }
+
+    if (panelID === null) {
       return false;
     }
 
@@ -45,7 +53,23 @@ PostBackRitalin.prototype = {
     }
   },
 
-  get_waitText: function(panelID) {
+  _findContainingPanel: function (el) {
+    // If the element is null, we're at the top of the DOM and haven't found it.
+    if (el === null || this._monitoredUpdatePanels === null)
+      return null;
+
+    if (el.id) {
+      for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
+        if (el.id.match(this._monitoredUpdatePanels[i].UpdatePanelID) !== null) {
+          return this._monitoredUpdatePanels[i].UpdatePanelID;
+        }
+      }
+    }
+
+    return this._findContainingPanel(el.parentNode);
+  },
+
+  get_waitText: function (panelID) {
     if (this._monitoredUpdatePanels) {
       for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
         if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) !== null) {
@@ -61,7 +85,7 @@ PostBackRitalin.prototype = {
     return null;
   },
 
-  get_waitImage: function(panelID) {
+  get_waitImage: function (panelID) {
     if (this._monitoredUpdatePanels) {
       for (var i = 0; i < this._monitoredUpdatePanels.length; i++) {
         if (panelID.match(this._monitoredUpdatePanels[i].UpdatePanelID) !== null) {
@@ -77,7 +101,7 @@ PostBackRitalin.prototype = {
     return null;
   },
 
-  _disableAllElements: function(panelID) {
+  _disableAllElements: function (panelID) {
     var panel = $get(panelID);
 
     if (panel !== null) {
@@ -103,19 +127,10 @@ PostBackRitalin.prototype = {
     }
   },
 
-  _parseSendingPanel: function(SenderString) {
-    // Grab just the sending UpdatePanel's ID.
-    var tmp = SenderString.split('|')[0];
-
-    // Replace any $ characters with underscores.
-    tmp = tmp.replace(/\$/g, '_');
-
-    return tmp;
-  },
-
-  _beginRequest: function(sender, args) {
-    var sendingPanel = this._parseSendingPanel(sender._postBackSettings.panelID);
+  _beginRequest: function (sender, args) {
     var element = args.get_postBackElement();
+
+    var sendingPanel = this._findContainingPanel(element);
 
     if (element !== null && this._isMonitoredRequest(sendingPanel)) {
       if (element.type == 'submit' || element.type == 'button') {
@@ -158,9 +173,10 @@ PostBackRitalin.prototype = {
     }
   },
 
-  _endRequest: function(sender, args) {
+  _endRequest: function (sender, args) {
     var element = sender._postBackSettings.sourceElement;
-    var sendingPanel = this._parseSendingPanel(sender._postBackSettings.panelID);
+
+    var sendingPanel = this._findContainingPanel(element);
 
     // Check to make sure the item hasn't been removed during the postback.
     if (element !== null && this._isMonitoredRequest(sendingPanel)) {
@@ -187,7 +203,7 @@ PostBackRitalin.prototype = {
     }
   },
 
-  _initialize: function() {
+  _initialize: function () {
     this._pageRequestManager = Sys.WebForms.PageRequestManager.getInstance();
 
     this._beginRequestHandler = Function.createDelegate(this, this._beginRequest);
