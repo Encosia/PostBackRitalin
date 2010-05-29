@@ -179,7 +179,7 @@ PostBackRitalin.prototype = {
     var sendingPanel = this._findContainingPanel(element);
 
     // Check to make sure the item hasn't been removed during the postback.
-    if (element !== null && this._isMonitoredRequest(sendingPanel)) {
+    if (element !== null && element !== undefined && this._isMonitoredRequest(sendingPanel)) {
       element.disabled = false;
 
       // Handles regular submit buttons.
@@ -192,6 +192,7 @@ PostBackRitalin.prototype = {
         element.src = this._oldImage;
         this._oldImage = null;
       }
+      // Handles anchor elements.
       else if (element.tagName == 'A') {
         element.href = this._oldHref;
         this._oldHref = null;
