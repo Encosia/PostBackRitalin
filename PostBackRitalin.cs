@@ -68,7 +68,8 @@ namespace Encosia
 
     protected override void OnPreRender(EventArgs e)
     {
-      if (!Page.IsPostBack)
+      // Only inject the object on initial page loads, IF partial rendering is enabled.
+      if (!Page.IsPostBack && ScriptManager.GetCurrent(Page).EnablePartialRendering)
       {
         // Register the JavaScript class include.
         if (HttpContext.Current.IsDebuggingEnabled)
