@@ -16,7 +16,7 @@ namespace Encosia
   {
     private MonitoredUpdatePanelCollection _monitoredUpdatePanels = new MonitoredUpdatePanelCollection();
     
-    private string _waitText = "Processing...";
+    private string _waitText;
     private string _waitImage;
     private string _waitClass;
 
