@@ -7,7 +7,7 @@ using System.Web.UI;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("PostBack Ritalin")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("An ASP.NET control to automatically disable controls during UpdatePanel refreshes.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Encosia")]
 [assembly: AssemblyProduct("PostBack Ritalin")]
