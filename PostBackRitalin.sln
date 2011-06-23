@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostBackRitalin", "PostBackRitalin.csproj", "{C92CD4C3-7271-4AE6-8654-7734725F247F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostBackRitalin", "PostBackRitalin\PostBackRitalin.csproj", "{C92CD4C3-7271-4AE6-8654-7734725F247F}"
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PostBackRitalinTest", "..\..\Visual Studio Websites\PostBackRitalinTest\", "{A5B95E5E-E0F8-41D4-900C-25A6EF3F258E}"
 	ProjectSection(WebsiteProperties) = preProject
