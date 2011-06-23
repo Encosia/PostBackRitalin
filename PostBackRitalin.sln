@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostBackRitalin", "PostBackRitalin\PostBackRitalin.csproj", "{C92CD4C3-7271-4AE6-8654-7734725F247F}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PostBackRitalinTest", "..\..\Visual Studio Websites\PostBackRitalinTest\", "{A5B95E5E-E0F8-41D4-900C-25A6EF3F258E}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "PostBackRitalinTest", "PostBackRitalin-Sample-Site\", "{A5B95E5E-E0F8-41D4-900C-25A6EF3F258E}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
 		ProjectReferences = "{C92CD4C3-7271-4AE6-8654-7734725F247F}|PostBackRitalin.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/PostBackRitalinTest"
-		Debug.AspNetCompiler.PhysicalPath = "..\..\Visual Studio Websites\PostBackRitalinTest\"
+		Debug.AspNetCompiler.PhysicalPath = "PostBackRitalin-Sample-Site\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\PostBackRitalinTest\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
 		Release.AspNetCompiler.VirtualPath = "/PostBackRitalinTest"
-		Release.AspNetCompiler.PhysicalPath = "..\..\Visual Studio Websites\PostBackRitalinTest\"
+		Release.AspNetCompiler.PhysicalPath = "PostBackRitalin-Sample-Site\"
 		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\PostBackRitalinTest\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
