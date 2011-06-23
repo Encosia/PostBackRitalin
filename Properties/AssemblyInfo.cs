@@ -11,7 +11,7 @@ using System.Web.UI;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Encosia")]
 [assembly: AssemblyProduct("PostBack Ritalin")]
-[assembly: AssemblyCopyright("Copyright © 2010")]
+[assembly: AssemblyCopyright("Copyright © 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
