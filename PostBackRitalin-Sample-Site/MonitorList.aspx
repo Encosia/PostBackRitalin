@@ -40,7 +40,7 @@
         <legend>UpdatePanel3</legend>
         <asp:UpdatePanel runat="server" ID="UpdatePanel3" UpdateMode="Conditional">
           <ContentTemplate>
-            <asp:ImageButton runat="server" ID="Button3" ImageUrl="~/search-btn.gif" OnClick="Button3_Click" />
+            <asp:ImageButton runat="server" ID="Button3" ImageUrl="~/Images/search-btn.gif" OnClick="Button3_Click" />
             <asp:Literal runat="server" ID="Literal3" />
           </ContentTemplate>
         </asp:UpdatePanel>
@@ -49,7 +49,7 @@
       <encosia:PostBackRitalin ID="PostBackRitalin1" runat="server" PreloadWaitImages="true" WaitClass="disabled">
         <MonitoredUpdatePanels>
           <encosia:MonitoredUpdatePanel UpdatePanelID="UpdatePanel2" DisableAllElements="true" />
-          <encosia:MonitoredUpdatePanel UpdatePanelID="UpdatePanel3" WaitImage="search-btn-disabled.gif" />
+          <encosia:MonitoredUpdatePanel UpdatePanelID="UpdatePanel3" WaitImage="~/Images/search-btn-disabled.gif" />
         </MonitoredUpdatePanels>
       </encosia:PostBackRitalin>
     </form>

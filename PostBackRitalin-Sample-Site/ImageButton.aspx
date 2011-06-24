@@ -13,13 +13,13 @@
         <legend>UpdatePanel1</legend>
         <asp:UpdatePanel runat="server" ID="UpdatePanel1" UpdateMode="Conditional">
           <ContentTemplate>
-            <asp:ImageButton runat="server" ID="ImageButton1"  OnClick="ImageButton1_Click" ImageUrl="~/search-btn.gif" />
+            <asp:ImageButton runat="server" ID="ImageButton1"  OnClick="ImageButton1_Click" ImageUrl="~/Images/search-btn.gif" />
             <asp:Literal runat="server" ID="Literal1" />
           </ContentTemplate>
         </asp:UpdatePanel>
       </fieldset>
       
-      <encosia:PostBackRitalin runat="server" WaitImage="search-btn-disabled.gif" />
+      <encosia:PostBackRitalin runat="server" WaitImage="~/Images/search-btn-disabled.gif" />
     </form>
 </body>
 </html>
