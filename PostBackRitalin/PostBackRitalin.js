@@ -55,7 +55,7 @@ PostBackRitalin.prototype = {
 
   _findContainingPanel: function (el) {
     // If the element is null, we're at the top of the DOM and haven't found it.
-    if (el === null || this._monitoredUpdatePanels === null)
+    if (el === null || typeof el === "undefined" || this._monitoredUpdatePanels === null)
       return null;
 
     if (el.id) {
